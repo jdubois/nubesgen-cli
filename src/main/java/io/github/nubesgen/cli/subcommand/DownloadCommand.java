@@ -28,36 +28,29 @@ public class DownloadCommand implements Callable<Integer> {
         Output.printTitle("Downloading the NubesGen configuration...");
         try {
             Files.copy(
-                    new URL("https://nubesgen.com/demo.tgz?iactool=TERRAFORM&region=eastus&application=APP_SERVICE.free&runtime=DOCKER&database=NONE.free").openStream(),
+                    new URL("https://nubesgen.com/demo.zip?iactool=TERRAFORM&region=eastus&application=APP_SERVICE.free&runtime=DOCKER&database=NONE.free").openStream(),
                     Paths.get("demo.zip"),
                     StandardCopyOption.REPLACE_EXISTING);
 
+            Output.printInfo("NubesGen configuration downloaded");
             Path source = Paths.get("demo.zip");
-            Path target = Paths.get(".");
+            Path target = Paths.get(System.getProperty("user.dir"));
             unzipFolder(source, target);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Output.printError("Error: " + e.getMessage());
         }
         return 0;
     }
 
     public static void unzipFolder(Path source, Path target) throws IOException {
-
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(source.toFile()))) {
-
-            // list files in zip
             ZipEntry zipEntry = zis.getNextEntry();
-
             while (zipEntry != null) {
-
                 boolean isDirectory = false;
                 if (zipEntry.getName().endsWith(File.separator)) {
                     isDirectory = true;
                 }
-
                 Path newPath = zipSlipProtect(zipEntry, target);
-
                 if (isDirectory) {
                     Files.createDirectories(newPath);
                 } else {
@@ -66,11 +59,14 @@ public class DownloadCommand implements Callable<Integer> {
                             Files.createDirectories(newPath.getParent());
                         }
                     }
+                    Output.printMessage(newPath.toString());
                     Files.copy(zis, newPath, StandardCopyOption.REPLACE_EXISTING);
                 }
                 zipEntry = zis.getNextEntry();
             }
             zis.closeEntry();
+        } catch (Exception e) {
+            Output.printError("Error: " + e.getMessage());
         }
     }
 
