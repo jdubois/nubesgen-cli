@@ -40,3 +40,4 @@ build/
 *.tfstate.backup
 *.tfstate.lock.info
 .terraform/
+dependency-reduced-pom.xml
