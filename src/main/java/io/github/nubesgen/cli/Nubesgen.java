@@ -1,6 +1,6 @@
 package io.github.nubesgen.cli;
 
-import io.github.nubesgen.cli.subcommand.ConfigureCommand;
+import io.github.nubesgen.cli.subcommand.HealthCommand;
 import io.github.nubesgen.cli.subcommand.DownloadCommand;
 import io.github.nubesgen.cli.subcommand.ScanCommand;
 import io.github.nubesgen.cli.util.Output;
@@ -20,7 +20,7 @@ public class Nubesgen implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        int exitCode = ConfigureCommand.configure();
+        int exitCode = HealthCommand.configure();
         if (exitCode == 0) {
             String getRequest = ScanCommand.scan();
             DownloadCommand.download(getRequest);
@@ -32,7 +32,7 @@ public class Nubesgen implements Callable<Integer> {
         AnsiConsole.systemInstall();
         Output.printTitle("NugesGen configuration starting");
         int exitCode = new CommandLine(new Nubesgen())
-                .addSubcommand(new ConfigureCommand())
+                .addSubcommand(new HealthCommand())
                 .addSubcommand(new ScanCommand())
                 .addSubcommand(new DownloadCommand())
                 .execute(args);
