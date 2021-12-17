@@ -5,21 +5,15 @@ on:
       - main
 jobs:
     build-jar:
+        name: 'Build JAR package'
         runs-on: ubuntu-20.04
         steps:
             - name: Build a Java project using Maven
               uses: microsoft/nubesgen-actions/gitops-build-java-maven@v0.4.0
-    build-unix-images:
+    build-linux-image:
+        name: 'Build Linux native image'
         needs: [ build-jar ]
-        runs-on: ${{ matrix.os }}
-        strategy:
-          matrix:
-            os: [ubuntu-latest, macos-latest]
-            include:
-                - os: 'ubuntu-latest'
-                  label: 'linux'
-                - os: 'macos-latest'
-                  label: 'mac'
+        runs-on: ubuntu-latest
         steps:
             - name: Download application package
               uses: actions/download-artifact@v2
@@ -37,10 +31,35 @@ jobs:
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
-                  name: ${{matrix.label}}-binary
+                  name: linux-binary
+                  path: 'nubesgen-cli-*'
+                  retention-days: 1
+    build-macos-image:
+        name: 'Build Mac OS X native image'
+        needs: [ build-jar ]
+        runs-on: macos-latest
+        steps:
+            - name: Download application package
+              uses: actions/download-artifact@v2
+              with:
+                  name: package
+            - name: Install GraalVM
+              uses: DeLaGuardo/setup-graalvm@5.0
+              with:
+                  graalvm-version: '21.3.0.java11'
+            - name: Install native-image
+              run: |
+                  gu install native-image
+            - name: Build native image
+              run: native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar
+            - name: Temporarily save package
+              uses: actions/upload-artifact@v2
+              with:
+                  name: macos-binary
                   path: 'nubesgen-cli-*'
                   retention-days: 1
     build-windows-image:
+        name: 'Build Windows native image'
         needs: [ build-jar ]
         runs-on: windows-latest
         steps:
@@ -58,12 +77,11 @@ jobs:
             - name: 'Install Visual C Build Tools Workload for Visual Studio 2017 Build Tools'
               run: |
                   choco install visualstudio2017-workload-vctools
-            - name: 'Set up  Visual C Build Tools Workload'
+            - name: 'Build native image'
               shell: cmd
               run: |
                   call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
-            - name: Build native image
-              run: native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar
+                  native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
