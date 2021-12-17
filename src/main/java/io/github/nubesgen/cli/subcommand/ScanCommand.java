@@ -23,29 +23,46 @@ public class ScanCommand implements Callable<Integer> {
         String getRequest = "?application=APP_SERVICE.basic";
         File mavenFile = new File("pom.xml");
         File gradleFile = new File("build.gradle");
+        String testFile = "";
         try {
             if (mavenFile.exists()) {
                 Output.printInfo("Maven detected");
-                String testFile = Files.readString(mavenFile.toPath());
-                if (testFile.contains("<groupId>org.springframework.boot</groupId>")) {
-                    Output.printInfo("Spring Boot detected");
+                testFile = Files.readString(mavenFile.toPath());
+                if (testFile.contains("org.springframework.boot")) {
+                    Output.printInfo("Runtime selected: Spring Boot + Maven");
                     getRequest += "&runtime=SPRING";
+                } else if (testFile.contains("io.quarkus")) {
+                    Output.printInfo("Runtime selected: Quarkus + Maven");
+                    getRequest += "&runtime=QUARKUS";
                 } else {
-                    Output.printInfo("Default Java configuration");
+                    Output.printInfo("Runtime selected: Java + Maven");
                     getRequest += "&runtime=JAVA";
                 }
             } else if (gradleFile.exists()) {
                 Output.printInfo("Gradle project detected");
-                String testFile = Files.readString(gradleFile.toPath());
+                testFile = Files.readString(gradleFile.toPath());
                 if (testFile.contains("org.springframework.boot")) {
-                    Output.printInfo("Spring Boot detected");
+                    Output.printInfo("Runtime selected: Spring Boot + Gradle");
                     getRequest += "&runtime=SPRING_GRADLE";
                 } else {
-                    Output.printInfo("Default Java configuration");
+                    Output.printInfo("Runtime selected: Java + Gradle");
                     getRequest += "&runtime=JAVA_GRADLE";
                 }
             } else {
-                Output.printInfo("Project technology couldn't be detected, failing back to Docker");
+                Output.printInfo("Runtime couldn't be detected, failing back to Docker");
+            }
+
+            if (testFile.contains("org.postgresql")) {
+                Output.printInfo("Database selected: PostgreSQL");
+                getRequest += "&database=POSTGRESQL";
+            } else if (testFile.contains("mysql-connector-java")) {
+                Output.printInfo("Database selected: MySQL");
+                getRequest += "&database=MYSQL";
+            } else if (testFile.contains("com.microsoft.sqlserver")) {
+                Output.printInfo("Database selected: Azure SQL");
+                getRequest += "&database=SQL_SERVER";
+            } else {
+                Output.printInfo("Database selected: None");
             }
         } catch (IOException e) {
             Output.printError("Error while reading files: " + e.getMessage());
