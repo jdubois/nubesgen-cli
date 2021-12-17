@@ -32,7 +32,10 @@ jobs:
               uses: actions/upload-artifact@v2
               with:
                   name: linux-binary
-                  path: 'nubesgen-cli-*'
+                  path: |
+                      nubesgen-cli-*
+                      !*.txt
+                      !*.jar
                   retention-days: 1
     build-macos-image:
         name: 'Build Mac OS X native image'
@@ -56,7 +59,10 @@ jobs:
               uses: actions/upload-artifact@v2
               with:
                   name: macos-binary
-                  path: 'nubesgen-cli-*'
+                  path: |
+                      nubesgen-cli-*
+                      !*.txt
+                      !*.jar
                   retention-days: 1
     build-windows-image:
         name: 'Build Windows native image'
