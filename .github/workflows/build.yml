@@ -55,6 +55,13 @@ jobs:
             - name: Install native-image
               run: |
                   gu.cmd install native-image
+            - name: 'Install Visual C Build Tools Workload for Visual Studio 2017 Build Tools'
+              run: |
+                  choco install visualstudio2017-workload-vctools
+            - name: 'Set up  Visual C Build Tools Workload'
+              shell: cmd
+              run: |
+                  call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
             - name: Build native image
               run: native-image --enable-url-protocols=https --static -jar nubesgen-cli-*.jar
             - name: Temporarily save package
