@@ -21,14 +21,14 @@ public class DownloadCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        return download();
+        return download("?application=APP_SERVICE.basic&runtime=DOCKER");
     }
 
-    public static Integer download() {
+    public static Integer download(String getRequest) {
         Output.printTitle("Downloading the NubesGen configuration...");
         try {
             Files.copy(
-                    new URL("https://nubesgen.com/demo.zip?iactool=TERRAFORM&region=eastus&application=APP_SERVICE.free&runtime=DOCKER&database=NONE.free").openStream(),
+                    new URL("https://nubesgen.com/demo.zip" + getRequest).openStream(),
                     Paths.get("demo.zip"),
                     StandardCopyOption.REPLACE_EXISTING);
 

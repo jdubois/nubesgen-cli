@@ -22,10 +22,8 @@ class Nubesgen implements Callable<Integer> {
     public Integer call() throws Exception {
         int exitCode = ConfigureCommand.configure();
         if (exitCode == 0) {
-            exitCode = ScanCommand.scan();
-        }
-        if (exitCode == 0) {
-            exitCode = DownloadCommand.download();
+            String getRequest = ScanCommand.scan();
+            DownloadCommand.download(getRequest);
         }
         return exitCode;
     }
