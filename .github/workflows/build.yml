@@ -63,7 +63,7 @@ jobs:
               run: |
                   call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
             - name: Build native image
-              run: native-image --enable-url-protocols=https --static -jar nubesgen-cli-*.jar
+              run: native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
