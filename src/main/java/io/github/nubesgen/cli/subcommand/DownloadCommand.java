@@ -14,6 +14,7 @@ import java.util.concurrent.Callable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import io.github.nubesgen.cli.Nubesgen;
 import io.github.nubesgen.cli.util.Output;
 
 @CommandLine.Command(name = "download", description = "Download the NubesGen configuration")
@@ -27,8 +28,12 @@ public class DownloadCommand implements Callable<Integer> {
     public static Integer download(String getRequest) {
         Output.printTitle("Downloading the NubesGen configuration...");
         try {
+            String server = "https://nubesgen.com";
+            if (Nubesgen.development) {
+                server = "http://localhost:8080";
+            }
             Files.copy(
-                    new URL("https://nubesgen.com/demo.zip" + getRequest).openStream(),
+                    new URL(server + "/demo.zip" + getRequest).openStream(),
                     Paths.get("demo.zip"),
                     StandardCopyOption.REPLACE_EXISTING);
 

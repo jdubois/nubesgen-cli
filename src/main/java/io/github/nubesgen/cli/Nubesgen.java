@@ -13,10 +13,10 @@ import java.util.concurrent.Callable;
 
 @Command(name = "nubesgen", mixinStandardHelpOptions = true, version = "0.0.1",
         description = "CLI for NubesGen.com")
-class Nubesgen implements Callable<Integer> {
+public class Nubesgen implements Callable<Integer> {
 
-    @Option(names = {"-c", "--configure"}, description = "Configure GitOps for the project")
-    private boolean gitops = true;
+    @Option(names = {"-d", "--development"}, description = "Development mode, this requires a local REST server running on http://127.0.0.1:8080")
+    public static boolean development;
 
     @Override
     public Integer call() throws Exception {
