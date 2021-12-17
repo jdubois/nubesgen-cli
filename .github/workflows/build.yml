@@ -23,7 +23,7 @@ jobs:
             - name: Install GraalVM
               uses: DeLaGuardo/setup-graalvm@5.0
               with:
-                graalvm-version: '21.3.0.java17'
+                graalvm-version: '21.3.0.java11'
             - name: Cache local Maven repository
               uses: actions/cache@v2
               with:
@@ -40,3 +40,4 @@ jobs:
                   ${{ matrix.gu-binary }} install native-image
             - name: Build native image
               run: native-image --enable-url-protocols=https --static -jar target/nubesgen-cli-*.jar
+
