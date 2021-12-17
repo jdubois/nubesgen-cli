@@ -37,7 +37,7 @@ jobs:
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
-                  name: package
+                  name: ${{matrix.label}}-binary
                   path: 'nubesgen-cli-*'
                   retention-days: 1
     build-windows-image:
@@ -67,6 +67,6 @@ jobs:
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
-                  name: package
+                  name: window-binary
                   path: 'nubesgen-cli-*.exe'
                   retention-days: 1
