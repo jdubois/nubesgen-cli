@@ -22,10 +22,10 @@ public class DownloadCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        return download("?application=APP_SERVICE.basic&runtime=DOCKER");
+        return download("demo", "?application=APP_SERVICE.basic&runtime=DOCKER");
     }
 
-    public static Integer download(String getRequest) {
+    public static Integer download(String projectName, String getRequest) {
         Output.printTitle("Downloading the NubesGen configuration...");
         try {
             String server = "https://nubesgen.com";
@@ -33,12 +33,12 @@ public class DownloadCommand implements Callable<Integer> {
                 server = "http://localhost:8080";
             }
             Files.copy(
-                    new URL(server + "/demo.zip" + getRequest).openStream(),
-                    Paths.get("demo.zip"),
+                    new URL(server + "/" + projectName + ".zip" + getRequest).openStream(),
+                    Paths.get(projectName + ".zip"),
                     StandardCopyOption.REPLACE_EXISTING);
 
             Output.printInfo("NubesGen configuration downloaded");
-            Path source = Paths.get("demo.zip");
+            Path source = Paths.get(projectName + ".zip");
             Path target = Paths.get(System.getProperty("user.dir"));
             unzipFolder(source, target);
         } catch (IOException e) {
