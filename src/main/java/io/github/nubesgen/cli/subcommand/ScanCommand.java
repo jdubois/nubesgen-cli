@@ -38,6 +38,7 @@ public class ScanCommand implements Callable<Integer> {
                     Output.printInfo("Runtime selected: Java + Maven");
                     getRequest += "&runtime=JAVA";
                 }
+                getRequest = javaDatabaseScanner(testFile, getRequest);
             } else if (gradleFile.exists()) {
                 Output.printInfo("Gradle project detected");
                 testFile = Files.readString(gradleFile.toPath());
@@ -48,25 +49,29 @@ public class ScanCommand implements Callable<Integer> {
                     Output.printInfo("Runtime selected: Java + Gradle");
                     getRequest += "&runtime=JAVA_GRADLE";
                 }
+                getRequest = javaDatabaseScanner(testFile, getRequest);
             } else {
                 Output.printInfo("Runtime couldn't be detected, failing back to Docker");
-            }
-
-            if (testFile.contains("org.postgresql")) {
-                Output.printInfo("Database selected: PostgreSQL");
-                getRequest += "&database=POSTGRESQL";
-            } else if (testFile.contains("mysql-connector-java")) {
-                Output.printInfo("Database selected: MySQL");
-                getRequest += "&database=MYSQL";
-            } else if (testFile.contains("com.microsoft.sqlserver")) {
-                Output.printInfo("Database selected: Azure SQL");
-                getRequest += "&database=SQL_SERVER";
-            } else {
-                Output.printInfo("Database selected: None");
             }
         } catch (IOException e) {
             Output.printError("Error while reading files: " + e.getMessage());
             Output.printInfo("Project technology couldn't be detected, failing back to Docker");
+        }
+        return getRequest;
+    }
+
+    private static String javaDatabaseScanner(String testFile, String getRequest) {
+        if (testFile.contains("org.postgresql")) {
+            Output.printInfo("Database selected: PostgreSQL");
+            getRequest += "&database=POSTGRESQL";
+        } else if (testFile.contains("mysql-connector-java")) {
+            Output.printInfo("Database selected: MySQL");
+            getRequest += "&database=MYSQL";
+        } else if (testFile.contains("com.microsoft.sqlserver")) {
+            Output.printInfo("Database selected: Azure SQL");
+            getRequest += "&database=SQL_SERVER";
+        } else {
+            Output.printInfo("Database selected: None");
         }
         return getRequest;
     }
