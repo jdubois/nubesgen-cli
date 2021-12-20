@@ -78,11 +78,12 @@ public class GitopsCommand implements Callable<Integer> {
             String servicePrincipal = ProcessExecutor
                     .executeAndReturnString("az ad sp create-for-rbac --role=\"Contributor\" --scopes=\"/subscriptions/"
                             + subscriptionId + "\" --sdk-auth --only-show-errors");
+            String servicePrincipalEscaped = servicePrincipal.replaceAll("\"", "\\\"");
 
             Output.printInfo("(7/7) Create secrets in GitHub");
             Output.printInfo("Using the GitHub CLI to set secrets.");
             String remoteRepo = ProcessExecutor.executeAndReturnString("git config --get remote.origin.url");
-            ProcessExecutor.execute("gh secret set AZURE_CREDENTIALS -b\"" + servicePrincipal + "\" -R " + remoteRepo);
+            ProcessExecutor.execute("gh secret set AZURE_CREDENTIALS -b\"" + servicePrincipalEscaped + "\" -R " + remoteRepo);
             ProcessExecutor.execute("gh secret set TF_STORAGE_ACCOUNT -b\"" + tfStorageAccount + "\" -R " + remoteRepo);
             Output.printTitle("Congratulations! You have successfully configured GitOps with NubesGen.");
         } catch (Exception e) {

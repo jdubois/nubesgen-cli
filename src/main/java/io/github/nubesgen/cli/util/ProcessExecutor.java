@@ -10,6 +10,7 @@ public class ProcessExecutor {
      * Execute a command, print the output and return the exit code.
      */
     public static Integer execute(String command) {
+        Output.printMessage(command);
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("bash", "-c", command);
         try {
@@ -25,11 +26,8 @@ public class ProcessExecutor {
             int exitVal = process.waitFor();
             return exitVal;
 
-        } catch (IOException e) {
-            Output.printError(e.getMessage());
-            return -1;
-        } catch (InterruptedException e) {
-            Output.printError(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
             return -1;
         }
     }
@@ -38,6 +36,7 @@ public class ProcessExecutor {
      * Execute a command and return the result as a String.
      */
     public static String executeAndReturnString(String command) throws Exception {
+        Output.printMessage(command);
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("bash", "-c", command);
 
@@ -48,7 +47,11 @@ public class ProcessExecutor {
         String result = "";
         String line;
         while ((line = reader.readLine()) != null) {
-            result += line;
+            if (result.length() > 0) {
+                result += "\n" + line;
+            } else {
+                result += line;
+            }
         }
 
         int exitVal = process.waitFor();
