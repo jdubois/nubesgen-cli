@@ -1,8 +1,9 @@
 package io.github.nubesgen.cli.util;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+
+import io.github.nubesgen.cli.Nubesgen;
 
 public class ProcessExecutor {
 
@@ -10,7 +11,7 @@ public class ProcessExecutor {
      * Execute a command, print the output and return the exit code.
      */
     public static Integer execute(String command) {
-        Output.printMessage(command);
+        Output.printVerbose(command);
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("bash", "-c", command);
         try {
@@ -27,7 +28,9 @@ public class ProcessExecutor {
             return exitVal;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            if (Nubesgen.verbose) {
+                e.printStackTrace();
+            }
             return -1;
         }
     }
@@ -36,7 +39,7 @@ public class ProcessExecutor {
      * Execute a command and return the result as a String.
      */
     public static String executeAndReturnString(String command) throws Exception {
-        Output.printMessage(command);
+        Output.printVerbose(command);
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("bash", "-c", command);
 
@@ -47,11 +50,7 @@ public class ProcessExecutor {
         String result = "";
         String line;
         while ((line = reader.readLine()) != null) {
-            if (result.length() > 0) {
-                result += "\n" + line;
-            } else {
-                result += line;
-            }
+            result += line;
         }
 
         int exitVal = process.waitFor();

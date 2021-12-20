@@ -72,18 +72,17 @@ public class GitopsCommand implements Callable<Integer> {
             ProcessExecutor.execute("az storage container create --name " + containerName + " --account-name "
                     + tfStorageAccount + " --account-key " + storageAccountKey + " -o none");
 
-            Output.printInfo("(6/7) Create service principal");
+            Output.printInfo("(6/7) Get current subscription");
             String subscriptionId = ProcessExecutor
                     .executeAndReturnString("az account show --query id --output tsv --only-show-errors");
-            String servicePrincipal = ProcessExecutor
-                    .executeAndReturnString("az ad sp create-for-rbac --role=\"Contributor\" --scopes=\"/subscriptions/"
-                            + subscriptionId + "\" --sdk-auth --only-show-errors");
-            String servicePrincipalEscaped = servicePrincipal.replaceAll("\"", "\\\"");
 
             Output.printInfo("(7/7) Create secrets in GitHub");
             Output.printInfo("Using the GitHub CLI to set secrets.");
             String remoteRepo = ProcessExecutor.executeAndReturnString("git config --get remote.origin.url");
-            ProcessExecutor.execute("gh secret set AZURE_CREDENTIALS -b\"" + servicePrincipalEscaped + "\" -R " + remoteRepo);
+            ProcessExecutor.execute("SERVICE_PRINCIPAL=$(az ad sp create-for-rbac --role=\"Contributor\" --scopes=\"/subscriptions/"
+                + subscriptionId + "\" --sdk-auth --only-show-errors) &&" +
+                " gh secret set AZURE_CREDENTIALS -b\"$SERVICE_PRINCIPAL\" -R " + 
+                remoteRepo);
             ProcessExecutor.execute("gh secret set TF_STORAGE_ACCOUNT -b\"" + tfStorageAccount + "\" -R " + remoteRepo);
             Output.printTitle("Congratulations! You have successfully configured GitOps with NubesGen.");
         } catch (Exception e) {
