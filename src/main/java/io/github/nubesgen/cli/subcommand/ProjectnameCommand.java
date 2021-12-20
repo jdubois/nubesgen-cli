@@ -22,6 +22,7 @@ public class ProjectnameCommand implements Callable<Integer> {
         String currentDir = Paths.get(".").toAbsolutePath().normalize().toString();
         Output.printMessage("Current directory: " + currentDir);
         String projectName = currentDir.substring(currentDir.lastIndexOf("/") + 1);
+        projectName = projectName.replaceAll(" ", "-").replaceAll("_", "-");
         if (projectName.length() > 8) {
             projectName = projectName.substring(0, 8);
         }

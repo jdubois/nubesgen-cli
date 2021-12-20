@@ -22,7 +22,7 @@ public class ScanCommand implements Callable<Integer> {
 
     public static String scan() {
         Output.printTitle("Scanning the current project...");
-        String getRequest = "?application=APP_SERVICE.basic&gitops=true";
+        String getRequest = "?application=APP_SERVICE.basic";
         File mavenFile = new File("pom.xml");
         File gradleFile = new File("build.gradle");
         String testFile = "";

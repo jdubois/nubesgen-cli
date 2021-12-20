@@ -26,6 +26,10 @@ public class Nubesgen implements Callable<Integer> {
         if (exitCode == 0) {
             String projectName = ProjectnameCommand.projectName();
             String getRequest = ScanCommand.scan();
+            int gitopsExitStatus = GitopsCommand.gitops(projectName);
+            if (gitopsExitStatus == 0) {
+                getRequest += "&gitops=true";
+            }
             DownloadCommand.download(projectName, getRequest);
         }
         return exitCode;
@@ -38,8 +42,8 @@ public class Nubesgen implements Callable<Integer> {
                 .addSubcommand(new HealthCommand())
                 .addSubcommand(new ProjectnameCommand())
                 .addSubcommand(new ScanCommand())
-                .addSubcommand(new DownloadCommand())
                 .addSubcommand(new GitopsCommand())
+                .addSubcommand(new DownloadCommand())
                 .execute(args);
 
         Output.printTitle("NugesGen configuration finished");
