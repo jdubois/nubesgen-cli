@@ -136,7 +136,6 @@ jobs:
               with:
                   name: ${{ matrix.artifact_name }}
             - name: Make binary executable because of https://github.com/actions/upload-artifact/issues/38
-              uses: actions/download-artifact@v2
               run: |
                 chmod +x ${{ matrix.artifact_name }}
             - name: Upload binary to GitHub Packages
