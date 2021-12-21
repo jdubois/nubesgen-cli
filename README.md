@@ -14,6 +14,7 @@ More specifically, this tool:
 
 To run the binary on a Mac, you need to:
 
-- Make the binary executable: `chmod +x nubesgen-cli-0.0.1-SNAPSHOT`
-- Allow Mac OS X to execute it: `xattr -d com.apple.quarantine nubesgen-cli-0.0.1-SNAPSHOT`
-- Run the binary: `./nubesgen-cli-0.0.1-SNAPSHOT`
+- Download the latest release: `gh release download --repo jdubois/nubesgen-cli --pattern='*-macos'`
+- Make the binary executable: `chmod +x nubesgen-cli-macos`
+- Allow Mac OS X to execute it: `xattr -d com.apple.quarantine nubesgen-cli-macos`
+- Run the binary: `./nubesgen-cli-macos`
