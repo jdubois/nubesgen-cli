@@ -34,6 +34,13 @@ public class Nubesgen implements Callable<Integer> {
                 getRequest += "&gitops=true";
             }
             DownloadCommand.download(projectName, getRequest);
+            Output.printTitle("NugesGen configuration finished");
+            if (gitopsExitStatus == 0) {
+                Output.printInfo("You can now save this configuration in Git:");
+                Output.printMessage("git add . && git commit -m \"Configure GitOps\" && git push");
+                Output.printInfo("To create a new environment, create a branch starting with \"env-\" and push it:");
+                Output.printMessage("git checkout -b \"env-dev\" && git push --set-upstream origin \"env-dev\"");
+            }
         }
         return exitCode;
     }
@@ -49,7 +56,6 @@ public class Nubesgen implements Callable<Integer> {
                 .addSubcommand(new DownloadCommand())
                 .execute(args);
 
-        Output.printTitle("NugesGen configuration finished");
         AnsiConsole.systemUninstall();
         System.exit(exitCode);
     }
