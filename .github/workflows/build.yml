@@ -140,5 +140,5 @@ jobs:
               with:
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
                   file: ${{ matrix.binary_name }}
-                  asset_name: ${{ matrix.artifact_name }}
+                  file_glob: true
                   tag: ${{ github.ref }}
