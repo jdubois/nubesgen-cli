@@ -142,3 +142,4 @@ jobs:
                   file: ${{ matrix.binary_name }}
                   file_glob: ${{ matrix.file_glob }}
                   tag: ${{ github.ref }}
+                  overwrite: true
