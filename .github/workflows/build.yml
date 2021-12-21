@@ -8,8 +8,25 @@ jobs:
         name: 'Build JAR package'
         runs-on: ubuntu-20.04
         steps:
-            - name: Build a Java project using Maven
-              uses: microsoft/nubesgen-actions/gitops-build-java-maven@v0.4.0
+            - name: Checkout code
+              uses: actions/checkout@v2
+            - name: Set up Java
+              uses: actions/setup-java@v2
+                  with:
+                      distribution: 'temurin'
+                      java-version: '11'
+                      check-latest: false
+                      cache: 'maven'
+            - name: Build with Maven
+              run: 'mvn package'
+            - name: Temporarily save package
+              uses: actions/upload-artifact@v2
+              with:
+                  name: java-binary
+                  path: |
+                      target/*.jar
+                      !target/original-*.jar
+                  retention-days: 1
     build-linux-image:
         name: 'Build Linux native image'
         needs: [ build-jar ]
@@ -18,7 +35,7 @@ jobs:
             - name: Download application package
               uses: actions/download-artifact@v2
               with:
-                  name: package
+                  name: java-binary
             - name: Install GraalVM
               uses: DeLaGuardo/setup-graalvm@5.0
               with:
@@ -45,7 +62,7 @@ jobs:
             - name: Download application package
               uses: actions/download-artifact@v2
               with:
-                  name: package
+                  name: java-binary
             - name: Install GraalVM
               uses: DeLaGuardo/setup-graalvm@5.0
               with:
@@ -72,7 +89,7 @@ jobs:
             - name: Download application package
               uses: actions/download-artifact@v2
               with:
-                  name: package
+                  name: java-binary
             - name: Install GraalVM
               uses: DeLaGuardo/setup-graalvm@5.0
               with:
@@ -94,3 +111,34 @@ jobs:
                   name: window-binary
                   path: 'nubesgen-cli-*.exe'
                   retention-days: 1
+    publish-binaries:
+        name: 'Publish binaries to GitHub packages'
+        needs: [ build-linux-image, build-macos-image, build-windows-image ]
+        runs-on: ubuntu-20.04
+        strategy:
+        matrix:
+            include:
+                - description: Java
+                  artifact_name: java-binary
+                  binary_name: nubesgen-cli-*.jar
+                - description: Linux
+                  artifact_name: linux-binary
+                  binary_name: nubesgen-cli-*
+                - description: Mac OS X
+                  artifact_name: macos-binary
+                  binary_name: nubesgen-cli-*
+                - description: Windows
+                  artifact_name: windows-binary
+                  binary_name: nubesgen-cli-*.exe
+        steps:
+            - name: Download binary
+              uses: actions/download-artifact@v2
+              with:
+                  name: ${{ matrix.asset_name }}
+            - name: Upload binary to GitHub Packages
+              uses: svenstaro/upload-release-action@v2
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  file: ${{ matrix.binary_name }}
+                  asset_name: ${{ matrix.artifact_name }}
+                  tag: ${{ github.ref }}
