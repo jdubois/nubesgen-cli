@@ -41,6 +41,7 @@ public class DownloadCommand implements Callable<Integer> {
             Path source = Paths.get(projectName + ".zip");
             Path target = Paths.get(System.getProperty("user.dir"));
             unzipFolder(source, target);
+            Files.delete(source);
         } catch (IOException e) {
             Output.printError("Error: " + e.getMessage());
         }
