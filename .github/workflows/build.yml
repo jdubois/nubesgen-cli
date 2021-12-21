@@ -116,20 +116,20 @@ jobs:
         needs: [ build-linux-image, build-macos-image, build-windows-image ]
         runs-on: ubuntu-20.04
         strategy:
-        matrix:
-            include:
-                - description: Java
-                  artifact_name: java-binary
-                  binary_name: nubesgen-cli-*.jar
-                - description: Linux
-                  artifact_name: linux-binary
-                  binary_name: nubesgen-cli-*
-                - description: Mac OS X
-                  artifact_name: macos-binary
-                  binary_name: nubesgen-cli-*
-                - description: Windows
-                  artifact_name: windows-binary
-                  binary_name: nubesgen-cli-*.exe
+            matrix:
+                include:
+                    - description: Java
+                      artifact_name: java-binary
+                      binary_name: nubesgen-cli-*.jar
+                    - description: Linux
+                      artifact_name: linux-binary
+                      binary_name: nubesgen-cli-*
+                    - description: Mac OS X
+                      artifact_name: macos-binary
+                      binary_name: nubesgen-cli-*
+                    - description: Windows
+                      artifact_name: windows-binary
+                      binary_name: nubesgen-cli-*.exe
         steps:
             - name: Download binary
               uses: actions/download-artifact@v2
