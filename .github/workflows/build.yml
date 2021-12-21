@@ -44,7 +44,7 @@ jobs:
               run: |
                   gu install native-image
             - name: Build native image
-              run: native-image --enable-url-protocols=https --static -jar nubesgen-cli-*.jar
+              run: native-image --enable-url-protocols=https --static -jar nubesgen-cli-*.jar nubesgen-cli-linux
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
@@ -71,7 +71,7 @@ jobs:
               run: |
                   gu install native-image
             - name: Build native image
-              run: native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar
+              run: native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar nubesgen-cli-macos
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
@@ -104,7 +104,7 @@ jobs:
               shell: cmd
               run: |
                   call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
-                  native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar
+                  native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar nubesgen-cli-windows
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
@@ -118,18 +118,18 @@ jobs:
         strategy:
             matrix:
                 include:
-                    - description: Java
-                      artifact_name: java-binary
+                    - artifact_name: java-binary
                       binary_name: nubesgen-cli-*.jar
-                    - description: Linux
-                      artifact_name: linux-binary
-                      binary_name: nubesgen-cli-*
-                    - description: Mac OS X
-                      artifact_name: macos-binary
-                      binary_name: nubesgen-cli-*
-                    - description: Windows
-                      artifact_name: windows-binary
-                      binary_name: nubesgen-cli-*.exe
+                      file_glob: true
+                    - artifact_name: linux-binary
+                      binary_name: nubesgen-cli-linux
+                      file_glob: false
+                    - artifact_name: macos-binary
+                      binary_name: nubesgen-cli-macos
+                      file_glob: false
+                    - artifact_name: windows-binary
+                      binary_name: nubesgen-cli-windows.exe
+                      file_glob: false
         steps:
             - name: Download binary
               uses: actions/download-artifact@v2
@@ -140,5 +140,5 @@ jobs:
               with:
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
                   file: ${{ matrix.binary_name }}
-                  file_glob: true
+                  file_glob: ${{ matrix.file_glob }}
                   tag: ${{ github.ref }}
