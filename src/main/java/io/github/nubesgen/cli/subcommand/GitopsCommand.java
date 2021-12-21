@@ -13,10 +13,13 @@ public class GitopsCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        return gitops("demo");
+        DecimalFormat formater = new DecimalFormat("0000");
+        String random1 = formater.format(Math.random() * (10000));
+        String random2 = formater.format(Math.random() * (10000));
+        return gitops("st" + random1 + random2);
     }
 
-    public static Integer gitops(String projectName) {
+    public static Integer gitops(String tfStorageAccount) {
         Output.printTitle("Setting up GitOps...");
         Output.printInfo("(1/7) Checking if the project is configured on GitHb...");
         try {
@@ -43,7 +46,7 @@ public class GitopsCommand implements Callable<Integer> {
         DecimalFormat formater = new DecimalFormat("0000");
         String random1 = formater.format(Math.random() * (10000));
         String random2 = formater.format(Math.random() * (10000));
-        String tfStorageAccount = projectName.replaceAll("-", "") + random1 + random2;
+        tfStorageAccount = tfStorageAccount.replaceAll("-", "").subSequence(0, 16) + random1 + random2;
         // The container name (inside the storage account) used by Terraform to store
         // its remote state.
         String containerName = "tfstate";
