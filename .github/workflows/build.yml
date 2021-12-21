@@ -108,7 +108,7 @@ jobs:
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
-                  name: window-binary
+                  name: windows-binary
                   path: 'nubesgen-cli-*.exe'
                   retention-days: 1
     publish-binaries:
