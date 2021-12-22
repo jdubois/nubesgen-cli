@@ -135,9 +135,6 @@ jobs:
               uses: actions/download-artifact@v2
               with:
                   name: ${{ matrix.artifact_name }}
-            - name: Make binary executable because of https://github.com/actions/upload-artifact/issues/38
-              run: |
-                chmod +x ${{ matrix.binary_name }}
             - name: Upload binary to GitHub Packages
               uses: svenstaro/upload-release-action@v2
               with:
