@@ -43,10 +43,14 @@ public class GitopsCommand implements Callable<Integer> {
         String location = "eastus";
         // The storage account (inside the resource group) used by Terraform to store
         // its remote state.
+        tfStorageAccount = tfStorageAccount.replaceAll("-", "");
+        if (tfStorageAccount.length() > 16) {
+            tfStorageAccount = tfStorageAccount.substring(0, 16);
+        }
         DecimalFormat formater = new DecimalFormat("0000");
         String random1 = formater.format(Math.random() * (10000));
         String random2 = formater.format(Math.random() * (10000));
-        tfStorageAccount = tfStorageAccount.replaceAll("-", "").substring(0, 16) + random1 + random2;
+        tfStorageAccount += random1 + random2;
         // The container name (inside the storage account) used by Terraform to store
         // its remote state.
         String containerName = "tfstate";
