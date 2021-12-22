@@ -11,7 +11,12 @@ public class ProcessExecutor {
      * Execute a command, print the output and return the exit code.
      */
     public static Integer execute(String command) {
-        Output.printVerbose(command);
+        if (Nubesgen.development) {
+            Output.printMessage("Development mode (command not executed): " + command);
+            return 0;
+        } else {
+            Output.printVerbose(command);
+        }
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("bash", "-c", command);
         try {
@@ -39,7 +44,12 @@ public class ProcessExecutor {
      * Execute a command and return the result as a String.
      */
     public static String executeAndReturnString(String command) throws Exception {
-        Output.printVerbose(command);
+        if (Nubesgen.development) {
+            Output.printMessage("Development mode (command not executed): " + command);
+            return "test";
+        } else {
+            Output.printVerbose(command);
+        }
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("bash", "-c", command);
 
