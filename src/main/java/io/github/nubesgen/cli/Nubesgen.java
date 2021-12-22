@@ -11,6 +11,8 @@ import org.fusesource.jansi.AnsiConsole;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+
+import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
 @Command(name = "nubesgen", mixinStandardHelpOptions = true, version = "0.0.1",
@@ -20,20 +22,28 @@ public class Nubesgen implements Callable<Integer> {
     @Option(names = {"-v", "--verbose"}, description = "Print verbose output")
     public static boolean verbose;
 
-    @Option(names = {"--development"}, description = "Development mode, this requires a local REST server running on http://127.0.0.1:8080")
+    @Option(names = {"-d", "--directory"}, description = "Directory in which the CLI will be executed")
+    public static String directory;
+
+    @Option(names = {"-x", "--development"}, description = "Development mode, this requires a local REST server running on http://127.0.0.1:8080")
     public static boolean development;
 
     @Override
     public Integer call() throws Exception {
         int exitCode = HealthCommand.configure();
         if (exitCode == 0) {
-            String projectName = ProjectnameCommand.projectName();
-            String getRequest = ScanCommand.scan();
+            String workingDirectory = Paths.get(".").toAbsolutePath().normalize().toString();
+            if (directory != null) {
+                workingDirectory = Paths.get(directory).toAbsolutePath().normalize().toString();
+            }
+            Output.printMessage("Working directory: " + workingDirectory);
+            String projectName = ProjectnameCommand.projectName(workingDirectory);
+            String getRequest = ScanCommand.scan(workingDirectory);
             int gitopsExitStatus = GitopsCommand.gitops(projectName);
             if (gitopsExitStatus == 0) {
                 getRequest += "&gitops=true";
             }
-            DownloadCommand.download(projectName, getRequest);
+            DownloadCommand.download(workingDirectory, projectName, getRequest);
             Output.printTitle("NugesGen configuration finished");
             if (gitopsExitStatus == 0) {
                 Output.printInfo("You can now save this configuration in Git:");

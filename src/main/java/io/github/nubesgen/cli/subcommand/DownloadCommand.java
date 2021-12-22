@@ -1,11 +1,13 @@
 package io.github.nubesgen.cli.subcommand;
 
 import picocli.CommandLine;
+import picocli.CommandLine.Option;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,13 +22,21 @@ import io.github.nubesgen.cli.util.Output;
 @CommandLine.Command(name = "download", description = "Download the NubesGen configuration")
 public class DownloadCommand implements Callable<Integer> {
 
+    @Option(names = {"-d", "--directory"}, description = "Directory in which the CLI will be executed")
+    public static String directory;
+
     @Override
     public Integer call() {
-        return download("demo", "?application=APP_SERVICE.basic&runtime=DOCKER");
+        String workingDirectory = Paths.get(".").toAbsolutePath().normalize().toString();
+        if (directory != null) {
+            workingDirectory = Paths.get(directory).toAbsolutePath().normalize().toString();
+        }
+        return download(workingDirectory, "demo", "?application=APP_SERVICE.basic&runtime=DOCKER");
     }
 
-    public static Integer download(String projectName, String getRequest) {
+    public static Integer download(String workingDirectory, String projectName, String getRequest) {
         Output.printTitle("Downloading the NubesGen configuration...");
+        
         try {
             String server = "https://nubesgen.com";
             if (Nubesgen.development) {
@@ -34,12 +44,12 @@ public class DownloadCommand implements Callable<Integer> {
             }
             Files.copy(
                     new URL(server + "/" + projectName + ".zip" + getRequest).openStream(),
-                    Paths.get(projectName + ".zip"),
+                    Paths.get(workingDirectory + FileSystems.getDefault().getSeparator() + projectName + ".zip"),
                     StandardCopyOption.REPLACE_EXISTING);
 
             Output.printInfo("NubesGen configuration downloaded");
-            Path source = Paths.get(projectName + ".zip");
-            Path target = Paths.get(System.getProperty("user.dir"));
+            Path source = Paths.get(workingDirectory + FileSystems.getDefault().getSeparator() + projectName + ".zip");
+            Path target = Paths.get(workingDirectory);
             unzipFolder(source, target);
             Files.delete(source);
         } catch (IOException e) {

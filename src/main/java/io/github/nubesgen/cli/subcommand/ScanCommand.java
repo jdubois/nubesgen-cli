@@ -1,10 +1,13 @@
 package io.github.nubesgen.cli.subcommand;
 
 import picocli.CommandLine;
+import picocli.CommandLine.Option;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
 import io.github.nubesgen.cli.util.Output;
@@ -12,20 +15,28 @@ import io.github.nubesgen.cli.util.Output;
 @CommandLine.Command(name = "scan", description = "Scan the current project to find the technologies it uses")
 public class ScanCommand implements Callable<Integer> {
 
+    @Option(names = {"-d", "--directory"}, description = "Directory in which the CLI will be executed")
+    public static String directory;
+
     @Override
     public Integer call() {
-        String request = scan();
+        String workingDirectory = Paths.get(".").toAbsolutePath().normalize().toString();
+        if (directory != null) {
+            workingDirectory = Paths.get(directory).toAbsolutePath().normalize().toString();
+        }
+        String request = scan(workingDirectory);
         Output.printTitle("GET request: " + request);
         Output.printInfo("Test this request on the NubesGen REST server:");
         Output.printMessage("curl \"https://nubesgen.com/demo.tgz" + request + "\" | tar -xzvf -");
         return 0;
     }
 
-    public static String scan() {
+    public static String scan(String workingDirectory) {
         Output.printTitle("Scanning the current project...");
+        Output.printMessage("Current directory: " + workingDirectory);
         String getRequest = "?application=APP_SERVICE.basic";
-        File mavenFile = new File("pom.xml");
-        File gradleFile = new File("build.gradle");
+        File mavenFile = new File(workingDirectory + FileSystems.getDefault().getSeparator() + "pom.xml");
+        File gradleFile = new File(workingDirectory + FileSystems.getDefault().getSeparator() + "build.gradle");
         String testFile = "";
         try {
             if (mavenFile.exists()) {
