@@ -13,27 +13,26 @@ More specifically, this tool:
 
 ## Installation
 
-This CLI is available as a native image on major platforms (Linux, Mac OS, Windows), and as a Java archive. The Java archive will run everywhere, but
-requires a Java Virtual Machine.
-
-Releases are available on GitHub at [https://github.com/jdubois/nubesgen-cli/releases](https://github.com/jdubois/nubesgen-cli/releases) and in the following examples we will use the
-GitHub CLI to download them.
-
 ## Prerequisites
 
 __Tip:__ You can go to [https://shell.azure.com](https://shell.azure.com) and login with the Azure subscription you want to use. This will provide you with the 
 mandatory prerequisites below (Bash, Azure CLI, and GitHub CLI).
 
-For this installation method to work, you need to have installed and configured the following tools:
+For the CLI to work, you need to have installed and configured the following tools:
 
 - [Bash](https://fr.wikipedia.org/wiki/Bourne-Again_shell), which is installed by default on most Linux distributions and on Mac OS X. If you're using Windows, one solution is to use [WSL](https://aka.ms/nubesgen-install-wsl).
 - [Azure CLI](https://aka.ms/nubesgen-install-az-cli). To login, use `az login`.
 - (optional) [GitHub CLI](https://cli.github.com/). To login, use `gh auth login`. This will automate creating the GitHub secrets for you, otherwise you will need to do it manually.
 
-## Donwloading and installing the CLI
+## Downloading and installing the CLI
+
+This CLI is available as a native image on major platforms (Linux, Mac OS, Windows), and as a Java archive. The Java archive will run everywhere, but
+requires a Java Virtual Machine.
+
+Releases are available on GitHub at [https://github.com/jdubois/nubesgen-cli/releases](https://github.com/jdubois/nubesgen-cli/releases) and in the following examples we will use the GitHub CLI to download them.
 
 <details>
-<summary>Donwloading and installing the CLI with Java</summary>
+<summary>Downloading and installing the CLI with Java</summary>
 
 To run the Java archive, you need to have a Java Virtual Machine (version 11 or higher) installed.
 
@@ -42,7 +41,7 @@ To run the Java archive, you need to have a Java Virtual Machine (version 11 or 
 </details>
 
 <details>
-<summary>Donwloading and installing the CLI on Linux</summary>
+<summary>Downloading and installing the CLI on Linux</summary>
 
 To run the binary on Linux, you need to:
 
@@ -52,7 +51,7 @@ To run the binary on Linux, you need to:
 
 </details>
 <details>
-<summary>Donwloading and installing the CLI on a Mac OS</summary>
+<summary>Downloading and installing the CLI on a Mac OS</summary>
 
 To run the binary on a Mac OS, you need to:
 
@@ -63,7 +62,7 @@ To run the binary on a Mac OS, you need to:
 
 </details>
 <details>
-<summary>Donwloading and installing the CLI on Windows</summary>
+<summary>Downloading and installing the CLI on Windows</summary>
 
 To run the binary on Windows, you need to:
 
