@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 import io.github.nubesgen.cli.util.Output;
 import io.github.nubesgen.cli.util.ProcessExecutor;
 
-@CommandLine.Command(name = "configure", description = "Configure GitOps on the current project")
+@CommandLine.Command(name = "healthcheck", description = "Checks if the required tools are installed and available")
 public class HealthCommand  implements Callable<Integer> {
 
     @Override public Integer call() {
