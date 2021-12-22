@@ -13,7 +13,7 @@ More specifically, this tool:
 
 ## Installation
 
-## Prerequisites
+### Prerequisites
 
 __Tip:__ You can go to [https://shell.azure.com](https://shell.azure.com) and login with the Azure subscription you want to use. This will provide you with the 
 mandatory prerequisites below (Bash, Azure CLI, and GitHub CLI).
@@ -24,7 +24,7 @@ For the CLI to work, you need to have installed and configured the following too
 - [Azure CLI](https://aka.ms/nubesgen-install-az-cli). To login, use `az login`.
 - (optional) [GitHub CLI](https://cli.github.com/). To login, use `gh auth login`. This will automate creating the GitHub secrets for you, otherwise you will need to do it manually.
 
-## Downloading and installing the CLI
+### Downloading and installing the CLI
 
 This CLI is available as a native image on major platforms (Linux, Mac OS, Windows), and as a Java archive. The Java archive will run everywhere, but
 requires a Java Virtual Machine.
@@ -72,3 +72,11 @@ To run the binary on Windows, you need to:
 </details>
 
 ## Using the CLI
+
+_Use the `-h` option with the CLI to have a complete and up-to-date help page_
+
+- Running the CLI without any arguments (e.g. `./nubesgen-cli-linux`) will run the most common sub-commands in a logical order. This will setup GitOps, scan your project to find the technologies used, and download the Infrastructure as Code configuration from the NubesGen REST server.
+- The `projectname` sub-command (e.g. `./nubesgen-cli-linux projectname`) will create a unique project name to be used inside Azure. It will take the first 8 letters of the name of your current directory, and add two random numbers.
+- The `scan` sub-command (e.g. `./nubesgen-cli-linux scan`) will scan your project to find the technologies used. It will use those technologies to generate a REST request String that can be sent to the NubesGen REST server.
+- The `gitops` sub-command (e.g. `./nubesgen-cli-linux gitops`) will setup GitOps for the current project.
+- The `download` sub-command (e.g. `./nubesgen-cli-linux download`) will download a default Infrastructure as Code configuration from the NubesGen REST server.
