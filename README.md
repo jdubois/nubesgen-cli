@@ -3,12 +3,22 @@
 This CLI is part of the [NubesGen project](https://nubesgen.com).
 
 It automates a project configuration: on simple projects,
-running `nubesgen` on the command line should be enough
+running `nubesgen-cli` on the command line should be enough
 to have it running on Azure with *no manual step*.
 
 More specifically, this tool:
 - scans the project to find its NubesGen configuration
 - sets up the GitOps workflow
+
+## Installation
+
+## Running the binary on Linux
+
+To run the binary on a Mac, you need to:
+
+- Download the latest release: `gh release download --repo jdubois/nubesgen-cli --pattern='*-linux'`
+- Make the binary executable: `chmod +x nubesgen-cli-linux`
+- Run the binary: `./nubesgen-cli-linux`
 
 ## Running the binary on a Mac
 
