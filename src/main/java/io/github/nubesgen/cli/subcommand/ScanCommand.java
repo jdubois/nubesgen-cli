@@ -14,7 +14,10 @@ public class ScanCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        Output.printTitle("GET request: " + scan());
+        String request = scan();
+        Output.printTitle("GET request: " + request);
+        Output.printInfo("Test this request on the NubesGen REST server:");
+        Output.printMessage("curl \"https://nubesgen.com/demo.tgz" + request + "\" | tar -xzvf -");
         return 0;
     }
 
