@@ -20,7 +20,7 @@ public class Nubesgen implements Callable<Integer> {
     @Option(names = {"-v", "--verbose"}, description = "Print verbose output")
     public static boolean verbose;
 
-    @Option(names = {"-d", "--development"}, description = "Development mode, this requires a local REST server running on http://127.0.0.1:8080")
+    @Option(names = {"--development"}, description = "Development mode, this requires a local REST server running on http://127.0.0.1:8080")
     public static boolean development;
 
     @Override
