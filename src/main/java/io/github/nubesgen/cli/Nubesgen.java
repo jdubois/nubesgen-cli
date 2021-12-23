@@ -15,7 +15,8 @@ import picocli.CommandLine.Option;
 import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
-@Command(name = "nubesgen", mixinStandardHelpOptions = true, version = "0.0.1",
+@Command(name = "nubesgen", mixinStandardHelpOptions = true,
+        versionProvider = io.github.nubesgen.cli.util.VersionProvider.class,
         description = "CLI for NubesGen.com")
 public class Nubesgen implements Callable<Integer> {
 
@@ -43,7 +44,11 @@ public class Nubesgen implements Callable<Integer> {
             if (gitopsExitStatus == 0) {
                 getRequest += "&gitops=true";
             }
-            DownloadCommand.download(workingDirectory, projectName, getRequest);
+            int downloadExitStatus = DownloadCommand.download(workingDirectory, projectName, getRequest);
+            if (downloadExitStatus != 0) {
+                Output.printError("NubesGen configuration failed! The configuration couldn't be downloaded from the server.");
+                return downloadExitStatus;
+            }
             Output.printTitle("NugesGen configuration finished");
             if (gitopsExitStatus == 0) {
                 Output.printInfo("You can now save this configuration in Git:");
