@@ -37,17 +37,14 @@ jobs:
                     - image_name: linux
                       os_name: ubuntu-latest
                       install_command: gu install native-image
-                      build_shell: bash
                       build_command: native-image --enable-url-protocols=https --static -jar nubesgen-cli-*.jar nubesgen-cli-linux
                     - image_name: macos
                       os_name: macos-latest
                       install_command: gu install native-image
-                      build_shell: bash
                       build_command: native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar nubesgen-cli-macos
                     - image_name: windows
                       os_name: windows-latest
-                      install_command: gu.cmd install native-image && choco install visualstudio2017-workload-vctools && call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
-                      build_shell: cmd
+                      install_command: gu.cmd install native-image && choco install visualstudio2017-workload-vctools && "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
                       build_command: native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar nubesgen-cli-windows
         steps:
             - name: Download application package
@@ -62,7 +59,6 @@ jobs:
               run: ${{ matrix.install_command }}
             - name: Build native image
               run: ${{ matrix.build_command }}
-              shell: ${{ matrix.build_shell }}
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
