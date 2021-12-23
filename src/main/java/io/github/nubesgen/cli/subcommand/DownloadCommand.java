@@ -42,8 +42,10 @@ public class DownloadCommand implements Callable<Integer> {
             if (Nubesgen.development) {
                 server = "http://localhost:8080";
             }
+            URL url = new URL(server + "/" + projectName + ".zip" + getRequest);
+            Output.printMessage("Downloading from: " + url.toString());
             Files.copy(
-                    new URL(server + "/" + projectName + ".zip" + getRequest).openStream(),
+                    url.openStream(),
                     Paths.get(workingDirectory + FileSystems.getDefault().getSeparator() + projectName + ".zip"),
                     StandardCopyOption.REPLACE_EXISTING);
 
@@ -54,11 +56,13 @@ public class DownloadCommand implements Callable<Integer> {
             Files.delete(source);
         } catch (IOException e) {
             Output.printError("Error: " + e.getMessage());
+            return 1;
         }
         return 0;
     }
 
     public static void unzipFolder(Path source, Path target) throws IOException {
+        Output.printMessage("Unzipping the NubesGen configuration file");
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(source.toFile()))) {
             ZipEntry zipEntry = zis.getNextEntry();
             while (zipEntry != null) {
