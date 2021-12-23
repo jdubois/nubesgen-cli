@@ -44,7 +44,7 @@ jobs:
               run: |
                   gu install native-image
             - name: Build native image
-              run: native-image --enable-url-protocols=https --static -jar nubesgen-cli-*.jar nubesgen-cli-linux
+              run: native-image -H:IncludeResources='.*/git.properties$' --enable-url-protocols=https --static -jar nubesgen-cli-*.jar nubesgen-cli-linux
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
@@ -71,7 +71,7 @@ jobs:
               run: |
                   gu install native-image
             - name: Build native image
-              run: native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar nubesgen-cli-macos
+              run: native-image -H:IncludeResources='.*/git.properties$' --enable-url-protocols=https -jar nubesgen-cli-*.jar nubesgen-cli-macos
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
@@ -104,7 +104,7 @@ jobs:
               shell: cmd
               run: |
                   call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
-                  native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar nubesgen-cli-windows
+                  native-image -H:IncludeResources='.*/git.properties$' --enable-url-protocols=https -jar nubesgen-cli-*.jar nubesgen-cli-windows
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
