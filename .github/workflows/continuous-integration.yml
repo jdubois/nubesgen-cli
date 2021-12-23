@@ -62,7 +62,7 @@ jobs:
               run: ${{ matrix.install_command }}
             - name: Build native image
               run: ${{ matrix.build_command }}
-              shell: ${{ matrix.shell }}
+              shell: ${{ matrix.build_shell }}
             - name: Temporarily save package
               uses: actions/upload-artifact@v2
               with:
