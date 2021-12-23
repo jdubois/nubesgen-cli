@@ -1,8 +1,6 @@
-name: Build a native image
+name: Create a release
 on:
-  push:
-    branches:
-      - main
+  create
 jobs:
     build-jar:
         name: 'Build JAR package'
