@@ -45,7 +45,7 @@ jobs:
                     - image_name: windows
                       os_name: windows-latest
                       install_command: gu.cmd install native-image && choco install visualstudio2017-workload-vctools
-                      build_command: '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat" && native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar nubesgen-cli-windows'
+                      build_command: '& "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat" && native-image --enable-url-protocols=https -jar nubesgen-cli-*.jar nubesgen-cli-windows'
         steps:
             - name: Download application package
               uses: actions/download-artifact@v2
